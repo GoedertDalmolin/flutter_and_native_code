@@ -49,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _sum = sum;
       });
     } on PlatformException catch (e) {
+      debugPrint('Error: $e');
       setState(() {
         _sum = 0;
       });
@@ -60,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Nativo'),
+        title: const Text('Native'),
       ),
       body: Center(
         child: Padding(
