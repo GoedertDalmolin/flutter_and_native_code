@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF313338)),
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
@@ -35,10 +36,23 @@ class _MyHomePageState extends State<MyHomePage> {
   int _b = 0;
   int _sum = 0;
 
-  calcSum() {
-    setState(() {
-      _sum = _a + _b;
-    });
+  Future calcSum() async {
+    const channel = MethodChannel('bgd.com.br/calculator');
+
+    try {
+      final sum = await channel.invokeMethod('calcSum', {
+        'a': _a,
+        'b': _b,
+      });
+
+      setState(() {
+        _sum = sum;
+      });
+    } on PlatformException catch (e) {
+      setState(() {
+        _sum = 0;
+      });
+    }
   }
 
   @override
@@ -93,6 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   'Result: $_sum',
                   style: const TextStyle(
                     fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Roboto',
                   ),
                 ),
               ),
